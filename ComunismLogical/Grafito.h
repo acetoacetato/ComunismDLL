@@ -128,6 +128,8 @@ extern "C"
 
 	DLL_EXPORT void C_Puntaje(char* linea, Listilla* puntajes);
 
+	DLL_EXPORT void GuardaPuntajes(Listilla* L,FILE* f);
+
 #ifdef __cplusplus
 }
 #endif
