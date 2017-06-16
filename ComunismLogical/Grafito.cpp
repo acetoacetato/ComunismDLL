@@ -66,7 +66,7 @@ Grafo* ArmaGrafo(int tipo) {
 					case 1: //codigo
 						str = (char*)malloc(sizeof(char)*BUFFSIZE);
 						strcpy(str, sep);
-						aux = creaNodo(str, level);
+						aux = CreaNodo(str, level);
 						//printf("%s\n", aux->key);
 						if (es_raiz) {
 							donGraph->raiz = aux;
@@ -80,7 +80,7 @@ Grafo* ArmaGrafo(int tipo) {
 						break;
 					case 3: //padres
 						quitaCaracteres(sep, '\n');
-						unePadres(aux, donGraph, sep);
+						UnePadres(aux, donGraph, sep);
 						break;
 
 				}
@@ -107,7 +107,7 @@ Grafo* ArmaGrafo(int tipo) {
 
 				str = (char*)malloc(sizeof(char)*BUFFSIZE);
 				strcpy(str, sep);
-				aux = creaNodo(str, level);
+				aux = CreaNodo(str, level);
 				if (es_raiz) {
 					donGraph->raiz = aux;
 					donGraph->current = aux;
@@ -126,7 +126,7 @@ Grafo* ArmaGrafo(int tipo) {
 				break;
 			case 5: //padres
 				quitaCaracteres(sep, '\n');
-				unePadres(aux, donGraph, sep);
+				UnePadres(aux, donGraph, sep);
 				break;
 			}
 			sep = strtok(NULL, ";");
@@ -140,7 +140,7 @@ Grafo* ArmaGrafo(int tipo) {
 
 }
 
-NodoG* creaNodo(char* key, void* data) {
+NodoG* CreaNodo(char* key, void* data) {
 	NodoG* Nod32 = (NodoG*)malloc(sizeof(NodoG));
 	Nod32->data = data;
 	Nod32->hijos = createList();
@@ -150,7 +150,7 @@ NodoG* creaNodo(char* key, void* data) {
 	return Nod32;
 }
 
-void unePadres(NodoG* nodog, Grafo* graf, char* listaPadres) {
+void UnePadres(NodoG* nodog, Grafo* graf, char* listaPadres) {
 	char* sep = strtok(listaPadres, ",");
 	NodoG* padre = NULL;
 
@@ -158,7 +158,7 @@ void unePadres(NodoG* nodog, Grafo* graf, char* listaPadres) {
 	if (!strcmp(listaPadres, "NULL\n") || !strcmp(listaPadres, "NULL")) return;
 	do {
 		//printf("sep=%s \n", sep);
-		padre = buscarNodo(sep, graf, 0);
+		padre = BuscarNodo(sep, graf, 0);
 		
 
 
@@ -184,7 +184,7 @@ void unePadres(NodoG* nodog, Grafo* graf, char* listaPadres) {
 
 
 
-NodoG* buscarNodo(char* key, Grafo* graf, int cambiaCurrent) {
+NodoG* BuscarNodo(char* key, Grafo* graf, int cambiaCurrent) {
 	NodoG* nodo = graf->raiz; //nodo* auxiliar para ir recorriendo el grafo
 	Cola* queque = createQeue(); //cola para hacer recorrido por anchura
 	Listilla* list = createList(); //lista de visitados
@@ -222,43 +222,55 @@ NodoG* buscarNodo(char* key, Grafo* graf, int cambiaCurrent) {
 
 
 
-int CargaPartida(Grafo* graf_lv, Grafo* graf_UW, Grafo* graf_RW, Grafo* graf_MW, Manager_partida* man, int tipo) {
+int CargaPartida(Grafo* graf_lv,  Manager_partida* man, int saveN) {
 	
 	char linea[BUFFSIZE];
 	int Nlinea = 0;
 	char save[BUFFSIZE];
-	CargaTipo(save, tipo);
+	
+
+
+	switch (saveN) {
+		case 1:
+			strcpy(save, "sv1.caballo");
+			break;
+		case 2:
+			strcpy(save, "sv2.caballo");
+			break;
+		case 3:
+			strcpy(save, "sv3.caballo");
+			break;
+		default:
+			return 0;
+	
+	}
+
 	FILE* f = fopen(save, "r");
 	if (!f) return 0;
-	Nlinea++;
+	
 	fgets(linea, BUFFSIZE, f);
-	linea[strlen(linea)-1] = '\0';
+	
 	do {
+		Nlinea++;
+		linea[strlen(linea) - 1] = '\0';
 		switch(Nlinea){
 			case 1:
 				C_Grafo(graf_lv, linea, 18);
 				break;
 			case 2:
-				C_Grafo(graf_UW, linea, 8);
-				break;
-			case 3:
-				C_Grafo(graf_RW, linea, 15);
-				break;
-			case 4:
-				C_Grafo(graf_MW, linea, 9);
-				break;
-			case 5:
 				man->lineaA = atoi(linea);
 				break;
-			case 6:
+			case 3:
 				man->lineaB = atoi(linea);
 				break;
-			case 7:
+			case 4:
 				man->lineaC = atoi(linea);
 				break;
-			case 8:
+			case 5:
 				man->muertes = atoi(linea);
 				break;
+			case 6:
+				man->puntaje = atoi(linea);
 
 		}
 
@@ -266,6 +278,42 @@ int CargaPartida(Grafo* graf_lv, Grafo* graf_UW, Grafo* graf_RW, Grafo* graf_MW,
 		fgets(linea, BUFFSIZE, f);
 	} while (!feof(f));
 	fclose(f);
+	return 1;
+}
+
+
+
+int CargaJuego(Grafo* graf_lv, Manager_general* manG) {
+	graf_lv = ArmaGrafo(1); // el de nivel solo debe ser creado, no inicializado
+	manG = (Manager_general*)malloc(sizeof(Manager_general)); //el manager y sus grafos deben ser inicializados
+	manG->HAB_UW = ArmaGrafo(2);
+	manG->HAB_RW = ArmaGrafo(3);
+	manG->HAB_MW = ArmaGrafo(4);
+	manG->ptge = createList();
+	FILE* f = fopen("Manager.caballo", "r");
+	int lineC = 0;
+	char linea[BUFFSIZE];
+	if (!f) return 0;
+	fgets(linea, BUFFSIZE, f);
+	do {
+		lineC++;
+		switch (lineC) {
+			case 1:
+				C_Puntaje(linea, manG->ptge);
+				break;
+			case 2:
+				strcpy(manG->logros, linea);
+				break;
+			case 3:
+				C_Grafo(manG->HAB_UW, linea, 8);
+				break;
+			case 4:
+				C_Grafo(manG->HAB_RW, linea, 15);
+			case 5:
+				C_Grafo(manG->HAB_MW, linea, 9);		
+		}
+	} while (!feof(f));
+	
 	return 1;
 }
 
@@ -285,7 +333,7 @@ void C_Grafo(Grafo* graf_lv, char* linea, int cant_nodos) {
 	int i = 0;
 	while (nodo = (NodoG*)topQ(q)) {
 
-		if (!compruebaPadres(nodo)) {
+		if (!CompruebaPadres(nodo)) {
 			graf_lv->corrupto = 1;
 			return;
 		}
@@ -304,7 +352,7 @@ void C_Grafo(Grafo* graf_lv, char* linea, int cant_nodos) {
 }
 
 
-int compruebaPadres(NodoG* nodo) {
+int CompruebaPadres(NodoG* nodo) {
 
 	if (is_empty(nodo->Padres)) return 1;
 
@@ -344,25 +392,36 @@ int CargaManager(Manager_general* man, int tipo) {
 
 
 
-int guardaPartida(Manager_partida* man, Grafo* graf_lv, Grafo* graf_uw, Grafo* graf_rw, Grafo* graf_mw, int tipo) {
+int GuardaPartida(Manager_partida* man, Grafo* graf_lv, int tipo) {
 	char save[BUFFSIZE];
 	CargaTipo(save, tipo);
 	if (!save) return 0;
 	FILE* f = fopen(save, "w");
 	if (!f) return 0;
 	GuardarGrafo(f, graf_lv);
-	fputc('\n', f); 
-	GuardarGrafo(f, graf_uw);
-	fputc('\n', f);
-	GuardarGrafo(f, graf_rw);
-	fputc('\n', f);
-	GuardarGrafo(f, graf_mw);
 	fputc('\n', f);
 	fprintf(f, "%ld\n", man->lineaA);
 	fprintf(f, "%ld\n", man->lineaB);
 	fprintf(f, "%ld\n", man->lineaC);
 	fprintf(f, "%ld\n", man->muertes);
+	fprintf(f, "%ld\n", man->puntaje);
 	fclose(f);
+	return 1;
+
+}
+
+int GuardaManagerG(Manager_general* man) {
+	FILE* f = fopen("Manager.caballo", "w");
+	if (!f) return 0;
+	GuardaPuntajes(man->ptge, f);
+
+	fprintf(f, "\n%s", man->logros);
+	fputc((int)"\n", f);
+	GuardarGrafo(f, man->HAB_UW);
+	fputc((int)"\n", f);
+	GuardarGrafo(f, man->HAB_RW);
+	fputc((int)"\n", f);
+	GuardarGrafo(f, man->HAB_MW);
 	return 1;
 
 }
@@ -388,15 +447,15 @@ void GuardarGrafo(FILE* f, Grafo* graf) {
 
 
 
-void  marcaNodo(Grafo* graf, char* code, int valor) {
-	NodoG* nodo = buscarNodo(code, graf, 0);
+void MarcaNodo(Grafo* graf, char* code, int valor) {
+	NodoG* nodo = BuscarNodo(code, graf, 0);
 	if (!nodo) return;
 	nodo->visitado = valor;
 
 }
 
 
-void imprimeGrafo(Grafo* lv) {
+void ImprimeGrafo(Grafo* lv) {
 	Cola* q = createQeue();
 	Listilla* vis = createList();
 	pushQ(q, lv->raiz);
@@ -439,4 +498,34 @@ void CargaTipo(char* str, int tipo) {
 		str = NULL;
 		return;
 	}
+}
+
+
+void C_Puntaje(char* linea, Listilla* puntajes) {
+	char* linea;
+	char* tok = strtok(linea, ";");
+	while(tok) {
+		linea = (char*)malloc(sizeof(char)*BUFFSIZE);
+		strcpy(linea, tok);
+		push_back(puntajes, linea);
+		strtok(NULL, ";");
+	};
+
+
+}
+
+void GuardaPuntajes(Listilla* L, FILE* f) {
+	
+	if (firstL(L)) {
+		do {
+			fprintf(f, (char*)currentL(L));
+		} while (nextL(L));
+	
+	}
+	else {
+		fprintf(f, "NULL");
+	}
+	
+
+
 }
