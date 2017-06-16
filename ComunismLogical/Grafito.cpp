@@ -337,8 +337,8 @@ void C_Grafo(Grafo* graf_lv, char* linea, int cant_nodos) {
 			graf_lv->corrupto = 1;
 			return;
 		}
-		nodo->visitado = linea[i];
-		i++;
+		nodo->visitado = linea[i]; ///revisar esta wea
+ 		i++;
 		firstL(nodo->hijos);
 		popQ(q);
 		if (is_empty(nodo->hijos)) continue;
