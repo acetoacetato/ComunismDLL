@@ -122,8 +122,6 @@ extern "C"
 	/* Imprime las claves del grafo 'lv' con recorrido por anchura */
 	DLL_EXPORT void ImprimeGrafo(Grafo* lv);
 
-	DLL_EXPORT char* TransformaString();
-
 	DLL_EXPORT void CargaTipo(char* str, int tipo);
 
 	DLL_EXPORT void C_Puntaje(char* linea, Listilla* puntajes);
