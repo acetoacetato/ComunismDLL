@@ -25,7 +25,7 @@ typedef struct {
 	void* data;
 	char key[30];
 	Listilla* hijos;
-	short int visitado;
+	int visitado;
 
 }NodoG;
 
@@ -41,12 +41,12 @@ typedef struct grafo Grafo;
 typedef struct lista Listilla;
 
 typedef struct {
-	long double exp_acu;
-	long int muertes;
-	long double puntaje;
-	long int lineaA;
-	long int lineaB;
-	long int lineaC;
+	double exp_acu;
+	int muertes;
+	double puntaje;
+	int lineaA;
+	int lineaB;
+	int lineaC;
 }Manager_partida;
 
 typedef struct {
@@ -127,6 +127,8 @@ extern "C"
 	DLL_EXPORT void C_Puntaje(char* linea, Listilla* puntajes);
 
 	DLL_EXPORT void GuardaPuntajes(Listilla* L,FILE* f);
+
+	DLL_EXPORT Listilla* NodosDisponibles(Grafo* graf);
 
 #ifdef __cplusplus
 }

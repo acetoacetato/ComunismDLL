@@ -13,11 +13,11 @@ void quitaCaracteres(char* str, char c) {
 }
 
 
-int AbraArchivo(int tipo) {
+int AbraArchivo(char* str) {
 	FILE* p;
 	int i=0;
 
-	p = fopen("ts.txt", "r");
+	p = fopen(str, "r");
 	if (p) {
 		i = 2;
 		fclose(p);
@@ -502,12 +502,12 @@ void CargaTipo(char* str, int tipo) {
 
 
 void C_Puntaje(char* linea, Listilla* puntajes) {
-	char* linea;
+	char* line;
 	char* tok = strtok(linea, ";");
 	while(tok) {
-		linea = (char*)malloc(sizeof(char)*BUFFSIZE);
-		strcpy(linea, tok);
-		push_back(puntajes, linea);
+		line = (char*)malloc(sizeof(char)*BUFFSIZE);
+		strcpy(line, tok);
+		push_back(puntajes, line);
 		strtok(NULL, ";");
 	};
 
@@ -529,3 +529,26 @@ void GuardaPuntajes(Listilla* L, FILE* f) {
 
 
 }
+/*
+
+Listilla* NodosDisponibles(Grafo* graf) {
+	NodoG* aux = graf->raiz;
+	Cola* q = createQeue();
+	Listilla* LVisitados = createList();
+	pushQ(q, aux);
+	firstL(aux->hijos);
+	
+
+
+	while (aux = (NodoG*)topQ(q)) {
+		popQ(q);
+
+		if(firstL(aux->hijos)){
+			do {
+				if (((NodoG*)currentL(aux->hijos))->visitado == 1) {
+					
+				}
+			} while (nextL(aux->hijos));
+		}
+
+}*/
