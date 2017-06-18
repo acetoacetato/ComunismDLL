@@ -78,17 +78,11 @@ char hab_MW[] = "HAB_M.txt";
 extern "C"
 {
 #endif
-	DLL_EXPORT int RetornaTest();
 
-	DLL_EXPORT void CambiaTest(int k);
-
-	DLL_EXPORT void imprimeRoot(Grafo* g);
-
-	DLL_EXPORT char* transformaString(char* str);
-
+	/* Función que comprueba el correcto funcionamiento de la funcion fopen */
 	DLL_EXPORT int AbraArchivo(char* str);
 
-	/* Crea un grafo, 'nombre' es nombre del archivo y 'es_save' es si es un grafo de nivel o grafo de habilidades */
+	/* Crea un grafo, de acuerdo a 'tipo' se abrie cierto archivo y se arma un grafo específico de acuerdo a 'tipo'*/
 	DLL_EXPORT Grafo* ArmaGrafo(int tipo);
 
 	/* Crea un nodo para el grafo y crea listas vacías de padres e hijos */
@@ -97,20 +91,31 @@ extern "C"
 	/* Busca un nodo en grafo 'graf' con key 'key' y cambia el current si 'cambiaCurrent' es 1 */
 	DLL_EXPORT NodoG* BuscarNodo(int key, Grafo* graf, int cambiaCurrent);
 
-	/* Llena lista de padres de 'graf' con string 'listaPadres' y une hijos con 'nodog' */
+	/* Llena lista de padres de 'nodoG' con string 'listaPadres' y los une hacia ambos lados */
 	DLL_EXPORT void UnePadres(NodoG* nodog, Grafo* graf, char* listaPadres);
 
 	/* Carga partida poblando el grafo de nivel y el manager de partida con los datos en archivo de nombre 'save' */
 	DLL_EXPORT int CargaPartida(int saveN);
 
+	/* llena el manager general con los datos necesarios */
+	DLL_EXPORT Manager_general* ArmaManagerG();
+
+	/* crea y llena el manager de partida con los datos necesarios */
+	DLL_EXPORT Manager_partida* ArmaManagerP();
 	/* Carga los grafos y el manager general para el inicio del juego, lueg pobla los grafos de habilidad y los une al manager general */
 	DLL_EXPORT int CargaJuego();
 
 	/* Carga grafo especifico con string (cambia nodoG->visitado) */
 	DLL_EXPORT void C_Grafo(Grafo* graf_lv, char* linea, int cant_nodos);
 
-	/* Comprueba que ls padres del nodo 'nodo' tiene los padres visitados */
+	/* Comprueba que los padres del nodo 'nodo' tiene todos sus padres "visitados" */
 	DLL_EXPORT int CompruebaPadres(NodoG* nodo); 
+
+	/* Crea y arga el Manager general con los datos necesrios para iniciar el juego*/
+	DLL_EXPORT int CargaManager();
+
+	/* Guarda en archivo 'save' la partida */
+	DLL_EXPORT int GuardaPartida(int tipo);
 
 	/* Guarda los nodoG->visitado de 'graf' en archivo 'f' */
 	DLL_EXPORT void GuardarGrafo(FILE* f, Grafo* graf);
@@ -118,26 +123,20 @@ extern "C"
 	/* Marca el nodo con key 'code' del grafo 'graf' con el valor de visitado = 'valor' */
 	DLL_EXPORT void  MarcaNodo(int tipo,int code, int valor);
 
-	/* Guarda en archivo 'save' la partida */
-	DLL_EXPORT int GuardaPartida(int tipo);
-
 	/* Guarda el manager general */
 	DLL_EXPORT int GuardaManagerG();
 
 	/* Imprime las claves del grafo 'lv' con recorrido por anchura */
 	DLL_EXPORT void ImprimeGrafo(int tipo);
 
+	/*Carga str con nombre de archivo a buscar a través de 'tipo'*/
 	DLL_EXPORT void CargaTipo(char* str, int tipo);
 
+	/*llena la lista puntjes a partir de el string linea*/
 	DLL_EXPORT void C_Puntaje(char* linea, Listilla* puntajes);
 
-	DLL_EXPORT void GuardaPuntajes(Listilla* L,FILE* f);
-
-	DLL_EXPORT Listilla* NodosDisponibles(Grafo* graf);
-
-	DLL_EXPORT Manager_general* ArmaManagerG();
-
-	
+	/* Guarfa los puntajes de la lista L en una linea en el archivo f */
+	DLL_EXPORT void GuardaPuntajes(Listilla* L,FILE* f);	
 
 #ifdef __cplusplus
 }

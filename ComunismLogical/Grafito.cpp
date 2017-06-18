@@ -5,29 +5,7 @@ Grafo* graf_MWG;
 Grafo* graf_RWG;
 Manager_partida* manP;
 Manager_general* manG;
-int test = 3;
 
-int RetornaTest() {
-	int a=test;
-	return a;
-}
-
-void CambiaTest(int k) {
-	test=k;
-	
-}
-
-void imprimeRoot(Grafo* g) {
-
-	printf("%s", g->raiz->key);
-
-}
-
-char* transformaString(char* str) {
-	char* a = (char*)malloc(sizeof(char)*30);
-	strcpy(a, str);
-	return a;
-}
 
 void quitaCaracteres(char* str, char c) {
 	str[strlen(str) - 1] = '\0';
@@ -50,7 +28,7 @@ int AbraArchivo(char* str) {
 
 }
 
-
+/* Crea un grafo, de acuerdo a 'tipo' se abrie cierto archivo y se arma un grafo específico de acuerdo a 'tipo'*/
 Grafo* ArmaGrafo(int tipo) {
 
 
@@ -178,6 +156,7 @@ Grafo* ArmaGrafo(int tipo) {
 
 }
 
+/* Crea un nodo para el grafo y crea listas vacías de padres e hijos */
 NodoG* CreaNodo(int key, void* data) {
 	NodoG* Nod32 = (NodoG*)malloc(sizeof(NodoG));
 	Nod32->data = data;
@@ -188,12 +167,12 @@ NodoG* CreaNodo(int key, void* data) {
 	return Nod32;
 }
 
+/* Llena lista de padres de 'nodoG' con string 'listaPadres' y los une hacia ambos lados */
 void UnePadres(NodoG* nodog, Grafo* graf, char* listaPadres) {
 	printf("Llamada:%s\n", listaPadres);
 	char* sep = strtok(listaPadres, ",");
 	NodoG* padre = NULL;
 
-	//printf("padres = %s\n", listaPadres);
 	if (!strcmp(listaPadres, "NULL\n") || !strcmp(listaPadres, "NULL")) return;
 	
 	do { 
@@ -223,7 +202,7 @@ void UnePadres(NodoG* nodog, Grafo* graf, char* listaPadres) {
 
 
 
-
+/* Busca un nodo en grafo 'graf' con key 'key' y cambia el current si 'cambiaCurrent' es 1 */
 NodoG* BuscarNodo(int key, Grafo* graf, int cambiaCurrent) {
 	NodoG* nodo = graf->raiz; //nodo* auxiliar para ir recorriendo el grafo
 	Cola* queque = createQeue(); //cola para hacer recorrido por anchura
@@ -261,7 +240,7 @@ NodoG* BuscarNodo(int key, Grafo* graf, int cambiaCurrent) {
 }
 
 
-
+/* Carga partida poblando el grafo de nivel y el manager de partida con los datos en archivo de acuerdo a 'saveN', que es el numero de archivo (archivo de guardado 1, 2 o 3) */
 int CargaPartida(int saveN) {
 	
 	char linea[BUFFSIZE];
@@ -363,14 +342,7 @@ Manager_general* ArmaManagerG() {
 
 
 int CargaJuego() {
-	Grafo* graf_lv = graf_lvl;
 	Manager_general* manGeneral = manG;
-	/*graf_lv = ArmaGrafo(1); // el de nivel solo debe ser creado, no inicializado
-	manG = (Manager_general*)malloc(sizeof(Manager_general)); //el manager y sus grafos deben ser inicializados
-	manG->HAB_UW = ArmaGrafo(2);
-	manG->HAB_RW = ArmaGrafo(3);
-	manG->HAB_MW = ArmaGrafo(4);
-	manG->ptge = createList();*/
 	FILE* f = fopen("Manager.txt", "r");
 	int lineC = 0;
 	char linea[BUFFSIZE];
@@ -401,7 +373,7 @@ int CargaJuego() {
 
 
 
-
+/* Carga grafo especifico con string (cambia nodoG->visitado) */
 void C_Grafo(Grafo* graf_lv, char* linea, int cant_nodos) {
 	if ((int)strlen(linea) < cant_nodos || (int)strlen(linea) > cant_nodos) {
 		graf_lv->corrupto = 1;
@@ -433,7 +405,7 @@ void C_Grafo(Grafo* graf_lv, char* linea, int cant_nodos) {
 	}
 }
 
-
+/* Comprueba que los padres del nodo 'nodo' tiene todos sus padres "visitados" */
 int CompruebaPadres(NodoG* nodo) {
 
 	if (is_empty(nodo->Padres)) return 1;
@@ -449,7 +421,7 @@ int CompruebaPadres(NodoG* nodo) {
 
 }
 
-
+/* Crea y arga el Manager general con los datos necesrios para iniciar el juego*/
 int CargaManager() {
 	Manager_general* man = manG;
 	man->HAB_UW = graf_UWG;
@@ -479,7 +451,7 @@ int CargaManager() {
 }
 
 
-
+/* Guarda en archivo "sv" + tipo + ".txt" la partida */
 int GuardaPartida(int tipo) {
 	char save[BUFFSIZE];
 	Manager_partida* man = manP;
@@ -537,7 +509,7 @@ void GuardarGrafo(FILE* f, Grafo* graf) {
 }
 
 
-
+/* Marca el nodo con key 'code' del grafo 'graf' con el valor de visitado = 'valor' */
 void MarcaNodo(int tipo, int code, int valor) {
 	Grafo* graf;
 	switch (tipo) {
@@ -561,7 +533,7 @@ void MarcaNodo(int tipo, int code, int valor) {
 
 }
 
-
+/* Imprime las claves del grafo asociado con 'tipo' con recorrido por anchura */
 void ImprimeGrafo(int tipo) {
 	Grafo* lv;
 	switch (tipo) {
@@ -604,7 +576,7 @@ void ImprimeGrafo(int tipo) {
 
 }
 
-
+/*Carga str con nombre de archivo a buscar a través de 'tipo'*/
 void CargaTipo(char* str, int tipo) {
 	switch (tipo) {
 
@@ -626,7 +598,7 @@ void CargaTipo(char* str, int tipo) {
 	}
 }
 
-
+/*llena la lista puntjes a partir de el string linea*/
 void C_Puntaje(char* linea, Listilla* puntajes) {
 	char* line;
 	char* tok = strtok(linea, ";");
@@ -640,6 +612,7 @@ void C_Puntaje(char* linea, Listilla* puntajes) {
 
 }
 
+/* Guarfa los puntajes de la lista L en una linea en el archivo f */
 void GuardaPuntajes(Listilla* L, FILE* f) {
 	
 	if (firstL(L)) {
@@ -658,6 +631,7 @@ void GuardaPuntajes(Listilla* L, FILE* f) {
 
 Manager_partida* ArmaManagerP() {
 	manP = (Manager_partida*)malloc(sizeof(Manager_partida));
+	return manP;
 }
 
 
