@@ -3,7 +3,7 @@
 #define COLA
 #include <stdlib.h>
 #include <stdio.h>
-
+#define DLL_EXPORT __declspec(dllexport)
 
 typedef struct nodoc{
 	void* data;
@@ -19,22 +19,31 @@ typedef struct {
 
 
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+	/* Reserva memoria e inicializa una cola vacía y la retorna */
+	DLL_EXPORT Cola* createQeue();
 
-/* Reserva memoria e inicializa una cola vacía y la retorna */
-Cola* createQeue();
+	/* Retorna el dato del top de la cola 'q' */
+	DLL_EXPORT void* topQ(Cola* q);
 
-/* Retorna el dato del top de la cola 'q' */
-void* topQ(Cola* q);
+	/* Inserta un nuevo dato 'dato' en la cola 'q' */
+	DLL_EXPORT void pushQ(Cola* q, void* dato);
 
-/* Inserta un nuevo dato 'dato' en la cola 'q' */
-void pushQ(Cola* q, void* dato);
+	/* Elimina el dato en 'top' de la cola 'q' */
+	DLL_EXPORT void popQ(Cola* q);
 
-/* Elimina el dato en 'top' de la cola 'q' */
-void popQ(Cola* q); 
+	/* Reserva e inicializa un nodo con dato 'data' y lo retorna */
+	DLL_EXPORT NodoC* _createNodeQ(void* data);
 
-/* Reserva e inicializa un nodo con dato 'data' y lo retorna */
-NodoC* _createNodeQ(void* data);
+	/* Vacía la cola 'q' y luego libera la memoria reservada por esta */
+	DLL_EXPORT void elimina_cola(Cola* q);
 
-/* Vacía la cola 'q' y luego libera la memoria reservada por esta */
-void elimina_cola(Cola* q);
+#ifdef __cplusplus
+}
+#endif
+
+
 #endif

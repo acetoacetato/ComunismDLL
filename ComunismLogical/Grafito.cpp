@@ -14,6 +14,7 @@ void quitaCaracteres(char* str, char c) {
 
 
 int AbraArchivo(char* str) {
+	printf("%s", str);
 	FILE* p;
 	int i=0;
 

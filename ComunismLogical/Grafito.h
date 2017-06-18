@@ -81,7 +81,7 @@ extern "C"
 
 	DLL_EXPORT char* transformaString();
 
-	DLL_EXPORT int AbraArchivo(int tipo);
+	DLL_EXPORT int AbraArchivo(char* str);
 
 	/* Crea un grafo, 'nombre' es nombre del archivo y 'es_save' es si es un grafo de nivel o grafo de habilidades */
 	DLL_EXPORT Grafo* ArmaGrafo(int tipo);
