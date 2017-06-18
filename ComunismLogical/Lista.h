@@ -53,7 +53,7 @@ extern "C"
 	 DLL_EXPORT Node* currentN(Listilla* L);
 
 	/* avanza el puntero 'current' de la lista hacia el siguiente */
-	 DLL_EXPORT Node* nextL(Listilla* L);
+	 DLL_EXPORT void* nextL(Listilla* L);
 
 	/* retrocede el puntero 'current' de la lista haceia el anterior */
 	 DLL_EXPORT Node* prev(Listilla* L);

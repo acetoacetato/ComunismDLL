@@ -34,12 +34,12 @@ Node*  createNode(void* data) {
 
 
 
-Node*  nextL(Listilla* L) {
+void*  nextL(Listilla* L) {
 	if (!L->current) return NULL;
 
 	if (L->current->next) {
 		L->current = L->current->next;
-		return L->current;
+		return L->current->data;
 	}
 	return NULL;
 }

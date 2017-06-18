@@ -656,6 +656,12 @@ void GuardaPuntajes(Listilla* L, FILE* f) {
 
 }
 
+Manager_partida* ArmaManagerP() {
+	manP = (Manager_partida*)malloc(sizeof(Manager_partida));
+}
+
+
+
 Grafo* RetornaGrafo(int tipo) {
 	switch (tipo) {
 	case 1:
@@ -674,6 +680,8 @@ Grafo* RetornaGrafo(int tipo) {
 	return NULL;
 }
 
+
+
 Manager_general* RetornaManG() {
 	return manG;
 }
@@ -681,26 +689,42 @@ Manager_partida* RetornaManP() {
 	return manP;
 }
 
-/*
 
-Listilla* NodosDisponibles(Grafo* graf) {
+
+
+
+
+Listilla* NodosDisponibles() {
+	Grafo* graf = graf_lvl;
 	NodoG* aux = graf->raiz;
 	Cola* q = createQeue();
-	Listilla* LVisitados = createList();
+	Listilla* L = createList();
 	pushQ(q, aux);
 	firstL(aux->hijos);
 	
 
+	if (((NodoG*)firstL(aux->hijos))->visitado) {
+		aux = (NodoG*)currentL(aux->hijos);
+	}
+	else if (((NodoG*)nextL(aux->hijos))->visitado) {
+		aux = (NodoG*)currentL(aux->hijos);
+	
+	}
+	else  if (((NodoG*)nextL(aux->hijos))->visitado) {
+		aux = (NodoG*)currentL(aux->hijos);
+	}
 
-	while (aux = (NodoG*)topQ(q)) {
-		popQ(q);
+	if (!firstL(aux->hijos)) return NULL;
+	do {
+		if (((NodoG*)currentL(aux->hijos))->visitado == 0) push_back(L, currentL(aux->hijos));
+	} while (nextL(aux->hijos));
 
-		if(firstL(aux->hijos)){
-			do {
-				if (((NodoG*)currentL(aux->hijos))->visitado == 1) {
-					
-				}
-			} while (nextL(aux->hijos));
-		}
+	if (is_empty(L)) {
+		push_back(L, ((NodoG*)currentL(aux->hijos))->Padres->first);
+	}
 
-}*/
+	return L;
+
+
+
+}
