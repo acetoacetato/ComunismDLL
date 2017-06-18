@@ -1,10 +1,15 @@
 #include "Grafito.h"
 
 
+void imprimeRoot(Grafo* g) {
 
-char* transformaString() {
+	printf("%s", g->raiz->key);
+
+}
+
+char* transformaString(char* str) {
 	char* a = (char*)malloc(sizeof(char)*30);
-	strcpy(a, "theGame");
+	strcpy(a, str);
 	return a;
 }
 
@@ -67,7 +72,7 @@ Grafo* ArmaGrafo(int tipo) {
 					case 1: //codigo
 						str = (char*)malloc(sizeof(char)*BUFFSIZE);
 						strcpy(str, sep);
-						aux = CreaNodo(str, level);
+						aux = CreaNodo(atoi(str), level);
 						//printf("%s\n", aux->key);
 						if (es_raiz) {
 							donGraph->raiz = aux;
@@ -98,7 +103,8 @@ Grafo* ArmaGrafo(int tipo) {
 	/* En el caso de habilidades, se separa codigo;nombre;visitado o activo;descripcion;efecto u orden al juego;lista de padres */
 	do {
 		skill = (Habilidad*)malloc(sizeof(Habilidad));
-
+		skill->descripcion = (char*)malloc(sizeof(char) * 3000);
+		skill->nombre = (char*) malloc(sizeof(char) * 300);
 		fgets(line, BUFFSIZE, f); //cada linea es un nodo del grafo
 		sep = strtok(line, ";");
 		cont = 1;
@@ -108,7 +114,7 @@ Grafo* ArmaGrafo(int tipo) {
 
 				str = (char*)malloc(sizeof(char)*BUFFSIZE);
 				strcpy(str, sep);
-				aux = CreaNodo(str, level);
+				aux = CreaNodo(atoi(str), skill);
 				if (es_raiz) {
 					donGraph->raiz = aux;
 					donGraph->current = aux;
@@ -141,12 +147,12 @@ Grafo* ArmaGrafo(int tipo) {
 
 }
 
-NodoG* CreaNodo(char* key, void* data) {
+NodoG* CreaNodo(int key, void* data) {
 	NodoG* Nod32 = (NodoG*)malloc(sizeof(NodoG));
 	Nod32->data = data;
 	Nod32->hijos = createList();
 	Nod32->Padres = createList();
-	strcpy(Nod32->key, key);
+	Nod32->key = key;
 	Nod32->visitado = 0;
 	return Nod32;
 }
@@ -157,9 +163,9 @@ void UnePadres(NodoG* nodog, Grafo* graf, char* listaPadres) {
 
 	//printf("padres = %s\n", listaPadres);
 	if (!strcmp(listaPadres, "NULL\n") || !strcmp(listaPadres, "NULL")) return;
-	do {
-		//printf("sep=%s \n", sep);
-		padre = BuscarNodo(sep, graf, 0);
+	do { 
+		//printf("sep=%s \n", sep); 
+		padre = BuscarNodo(atoi(sep), graf, 0);
 		
 
 
@@ -185,7 +191,7 @@ void UnePadres(NodoG* nodog, Grafo* graf, char* listaPadres) {
 
 
 
-NodoG* BuscarNodo(char* key, Grafo* graf, int cambiaCurrent) {
+NodoG* BuscarNodo(int key, Grafo* graf, int cambiaCurrent) {
 	NodoG* nodo = graf->raiz; //nodo* auxiliar para ir recorriendo el grafo
 	Cola* queque = createQeue(); //cola para hacer recorrido por anchura
 	Listilla* list = createList(); //lista de visitados
@@ -195,7 +201,7 @@ NodoG* BuscarNodo(char* key, Grafo* graf, int cambiaCurrent) {
 
 	while ( (nodo = (NodoG*)topQ(queque)) ) {
 
-		if (!strcmp(nodo->key, key)) {
+		if (nodo->key == key) {
 			
 
 			return nodo;
@@ -386,7 +392,7 @@ int CargaManager(Manager_general* man, int tipo) {
 		ptge = strtok(NULL, ";");
 	} while (ptge);
 	fgets(linea, BUFFSIZE, f);
-	strcpy_s(man->logros, linea);
+	strcpy(man->logros, linea);
 	fclose(f);
 	return 1;
 }
@@ -448,7 +454,7 @@ void GuardarGrafo(FILE* f, Grafo* graf) {
 
 
 
-void MarcaNodo(Grafo* graf, char* code, int valor) {
+void MarcaNodo(Grafo* graf, int code, int valor) {
 	NodoG* nodo = BuscarNodo(code, graf, 0);
 	if (!nodo) return;
 	nodo->visitado = valor;
@@ -460,10 +466,10 @@ void ImprimeGrafo(Grafo* lv) {
 	Cola* q = createQeue();
 	Listilla* vis = createList();
 	pushQ(q, lv->raiz);
-	if (!topQ(q)) printf("no entra la wea");
+	if (!topQ(q)) printf("Grafo vacio");
 	NodoG* nodo = (NodoG*)topQ(q);
 	while (nodo) {
-		printf("\"%s\"\n", nodo->key);
+		printf("\"%i\"\n", nodo->key);
 		popQ(q);
 		firstL(nodo->hijos);
 		do {

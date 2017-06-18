@@ -23,7 +23,7 @@ typedef struct {
 
 	Listilla* Padres;
 	void* data;
-	char key[30];
+	int key;
 	Listilla* hijos;
 	int visitado;
 
@@ -51,7 +51,7 @@ typedef struct {
 
 typedef struct {
 	Listilla* ptge;
-	char logros[11];
+	char* logros;
 	Grafo* HAB_UW;
 	Grafo* HAB_RW;
 	Grafo*  HAB_MW;
@@ -59,8 +59,8 @@ typedef struct {
 
 
 typedef struct {
-	char nombre[BUFFSIZE];
-	char descripcion[BUFFSIZE];
+	char* nombre;
+	char* descripcion;
 }Habilidad;
 
 
@@ -78,8 +78,9 @@ char hab_MW[] = "HAB_M.txt";
 extern "C"
 {
 #endif
+	DLL_EXPORT void imprimeRoot(Grafo* g);
 
-	DLL_EXPORT char* transformaString();
+	DLL_EXPORT char* transformaString(char* str);
 
 	DLL_EXPORT int AbraArchivo(char* str);
 
@@ -87,10 +88,10 @@ extern "C"
 	DLL_EXPORT Grafo* ArmaGrafo(int tipo);
 
 	/* Crea un nodo para el grafo y crea listas vacías de padres e hijos */
-	DLL_EXPORT NodoG* CreaNodo(char* key, void* data);
+	DLL_EXPORT NodoG* CreaNodo(int key, void* data);
 
 	/* Busca un nodo en grafo 'graf' con key 'key' y cambia el current si 'cambiaCurrent' es 1 */
-	DLL_EXPORT NodoG* BuscarNodo(char* key, Grafo* graf, int cambiaCurrent);
+	DLL_EXPORT NodoG* BuscarNodo(int key, Grafo* graf, int cambiaCurrent);
 
 	/* Llena lista de padres de 'graf' con string 'listaPadres' y une hijos con 'nodog' */
 	DLL_EXPORT void UnePadres(NodoG* nodog, Grafo* graf, char* listaPadres);
@@ -111,7 +112,7 @@ extern "C"
 	DLL_EXPORT void GuardarGrafo(FILE* f, Grafo* graf);
 
 	/* Marca el nodo con key 'code' del grafo 'graf' con el valor de visitado = 'valor' */
-	DLL_EXPORT void  MarcaNodo(Grafo* graf, char* code, int valor);
+	DLL_EXPORT void  MarcaNodo(Grafo* graf,int code, int valor);
 
 	/* Guarda en archivo 'save' la partida */
 	DLL_EXPORT int GuardaPartida(Manager_partida* man, Grafo* graf_lv, int tipo);
