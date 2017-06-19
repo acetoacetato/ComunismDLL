@@ -629,13 +629,15 @@ void GuardaPuntajes(Listilla* L, FILE* f) {
 
 }
 
+
+/* crea y llena el manager de partida con los datos necesarios */
 Manager_partida* ArmaManagerP() {
 	manP = (Manager_partida*)malloc(sizeof(Manager_partida));
 	return manP;
 }
 
 
-
+/* Retorna un grafo a partir de 'tipo' */
 Grafo* RetornaGrafo(int tipo) {
 	switch (tipo) {
 	case 1:
@@ -655,10 +657,12 @@ Grafo* RetornaGrafo(int tipo) {
 }
 
 
-
+/* Retorna el manager general para su uso fuera del dll */
 Manager_general* RetornaManG() {
 	return manG;
 }
+
+/*Retorna el manager de partida para su uso fuera del dll*/
 Manager_partida* RetornaManP() {
 	return manP;
 }
@@ -667,6 +671,7 @@ Manager_partida* RetornaManP() {
 
 
 
+/* Retorna una lista con los niveles disponibles a partir de graf_lvl */
 
 Listilla* NodosDisponibles() {
 	Grafo* graf = graf_lvl;
@@ -700,5 +705,27 @@ Listilla* NodosDisponibles() {
 	return L;
 
 
+
+}
+
+/* Aumenta la cantidad de muertes del jugador */
+void AumentaMuertes() {
+	manP->muertes++;
+
+
+}
+
+/* Aumenta la cantidad de veces que se ha asado una línea */
+void AumentaLinea(int nL) {
+	switch (nL) {
+		case 1:
+			manP->lineaA++;
+			break;
+		case 2:
+			manP->lineaB++;
+			break;
+		case 3:
+			manP->lineaC++;
+	}
 
 }

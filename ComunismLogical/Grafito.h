@@ -138,6 +138,25 @@ extern "C"
 	/* Guarfa los puntajes de la lista L en una linea en el archivo f */
 	DLL_EXPORT void GuardaPuntajes(Listilla* L,FILE* f);	
 
+	/* Retorna un grafo a partir de 'tipo' */
+	DLL_EXPORT Grafo* RetornaGrafo(int tipo);
+
+	/* Retorna el manager general para su uso fuera del dll */
+	DLL_EXPORT Manager_general* RetornaManG();
+
+	/*Retorna el manager de partida para su uso fuera del dll*/
+	DLL_EXPORT Manager_partida* RetornaManP();
+
+	/* Retorna una lista con los niveles disponibles a partir de graf_lvl */
+	DLL_EXPORT Listilla* NodosDisponibles();
+
+	/* Aumenta la cantidad de muertes del jugador */
+	DLL_EXPORT void AumentaMuertes();
+
+	/* Aumenta la cantidad de veces que se ha asado una línea */
+	DLL_EXPORT void AumentaLinea(int nL);
+
+
 #ifdef __cplusplus
 }
 #endif
